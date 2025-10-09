@@ -1,0 +1,105 @@
+----------------------------------------------------------------
+Thu Oct 09 16:54:50 GMT+01:00 2025:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.16.1.1 - (1901046): instance a816c00e-0199-c9ae-a634-000005cbcfb8 
+on database directory C:\Users\brais\Downloads\store-app\store-app\work\database with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@76ed5528 
+Loaded from file:/C:/Users/brais/.m2/repository/org/apache/derby/derby/10.16.1.1/derby-10.16.1.1.jar
+java.vendor=Microsoft
+java.runtime.version=21.0.8+9-LTS
+user.dir=C:\Users\brais\Downloads\store-app\store-app
+os.name=Windows 11
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Thu Oct 09 16:57:53 GMT+01:00 2025:
+Shutting down instance a816c00e-0199-c9ae-a634-000005cbcfb8 on database directory C:\Users\brais\Downloads\store-app\store-app\work\database with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@76ed5528 
+Thu Oct 09 16:57:53 GMT+01:00 2025 Thread[#602,Thread-20,5,main] Cleanup action starting
+ERROR XBM0I: Directory work/database cannot be removed.
+	at org.apache.derby.shared.common.error.StandardException.newException(StandardException.java:299)
+	at org.apache.derby.shared.common.error.StandardException.newException(StandardException.java:294)
+	at org.apache.derby.iapi.services.monitor.Monitor.removePersistentService(Monitor.java:663)
+	at org.apache.derby.impl.jdbc.EmbedConnection.removePersistentService(EmbedConnection.java:4014)
+	at org.apache.derby.impl.jdbc.EmbedConnection.<init>(EmbedConnection.java:620)
+	at org.apache.derby.iapi.jdbc.InternalDriver.getNewEmbedConnection(InternalDriver.java:630)
+	at org.apache.derby.iapi.jdbc.InternalDriver$LoginCallable.call(InternalDriver.java:400)
+	at org.apache.derby.iapi.jdbc.InternalDriver$LoginCallable.call(InternalDriver.java:376)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Cleanup action completed
+Thu Oct 09 16:57:53 GMT+01:00 2025 Thread[#602,Thread-20,5,main] Cleanup action starting
+ERROR XBM0I: Directory work/database cannot be removed.
+	at org.apache.derby.shared.common.error.StandardException.newException(StandardException.java:299)
+	at org.apache.derby.shared.common.error.StandardException.newException(StandardException.java:294)
+	at org.apache.derby.iapi.services.monitor.Monitor.removePersistentService(Monitor.java:663)
+	at org.apache.derby.impl.jdbc.EmbedConnection.removePersistentService(EmbedConnection.java:4014)
+	at org.apache.derby.impl.jdbc.EmbedConnection.<init>(EmbedConnection.java:620)
+	at org.apache.derby.iapi.jdbc.InternalDriver.getNewEmbedConnection(InternalDriver.java:630)
+	at org.apache.derby.iapi.jdbc.InternalDriver$LoginCallable.call(InternalDriver.java:400)
+	at org.apache.derby.iapi.jdbc.InternalDriver$LoginCallable.call(InternalDriver.java:376)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Cleanup action completed
+----------------------------------------------------------------
+Thu Oct 09 16:57:54 GMT+01:00 2025:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.16.1.1 - (1901046): instance 610e402f-0199-c9ae-a634-000005cbcfb8 
+on database directory C:\Users\brais\Downloads\store-app\store-app\work\database with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@76ed5528 
+Loaded from file:/C:/Users/brais/.m2/repository/org/apache/derby/derby/10.16.1.1/derby-10.16.1.1.jar
+java.vendor=Microsoft
+java.runtime.version=21.0.8+9-LTS
+user.dir=C:\Users\brais\Downloads\store-app\store-app
+os.name=Windows 11
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
+----------------------------------------------------------------
+Thu Oct 09 16:57:57 GMT+01:00 2025:
+Shutting down instance 610e402f-0199-c9ae-a634-000005cbcfb8 on database directory C:\Users\brais\Downloads\store-app\store-app\work\database with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@76ed5528 
+Thu Oct 09 16:57:57 GMT+01:00 2025 Thread[#1119,Thread-36,5,main] Cleanup action starting
+ERROR XBM0I: Directory work/database cannot be removed.
+	at org.apache.derby.shared.common.error.StandardException.newException(StandardException.java:299)
+	at org.apache.derby.shared.common.error.StandardException.newException(StandardException.java:294)
+	at org.apache.derby.iapi.services.monitor.Monitor.removePersistentService(Monitor.java:663)
+	at org.apache.derby.impl.jdbc.EmbedConnection.removePersistentService(EmbedConnection.java:4014)
+	at org.apache.derby.impl.jdbc.EmbedConnection.<init>(EmbedConnection.java:620)
+	at org.apache.derby.iapi.jdbc.InternalDriver.getNewEmbedConnection(InternalDriver.java:630)
+	at org.apache.derby.iapi.jdbc.InternalDriver$LoginCallable.call(InternalDriver.java:400)
+	at org.apache.derby.iapi.jdbc.InternalDriver$LoginCallable.call(InternalDriver.java:376)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Cleanup action completed
+Thu Oct 09 16:57:57 GMT+01:00 2025 Thread[#1119,Thread-36,5,main] Cleanup action starting
+ERROR XBM0I: Directory work/database cannot be removed.
+	at org.apache.derby.shared.common.error.StandardException.newException(StandardException.java:299)
+	at org.apache.derby.shared.common.error.StandardException.newException(StandardException.java:294)
+	at org.apache.derby.iapi.services.monitor.Monitor.removePersistentService(Monitor.java:663)
+	at org.apache.derby.impl.jdbc.EmbedConnection.removePersistentService(EmbedConnection.java:4014)
+	at org.apache.derby.impl.jdbc.EmbedConnection.<init>(EmbedConnection.java:620)
+	at org.apache.derby.iapi.jdbc.InternalDriver.getNewEmbedConnection(InternalDriver.java:630)
+	at org.apache.derby.iapi.jdbc.InternalDriver$LoginCallable.call(InternalDriver.java:400)
+	at org.apache.derby.iapi.jdbc.InternalDriver$LoginCallable.call(InternalDriver.java:376)
+	at java.base/java.util.concurrent.FutureTask.run(FutureTask.java:317)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1144)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:642)
+	at java.base/java.lang.Thread.run(Thread.java:1583)
+Cleanup action completed
+----------------------------------------------------------------
+Thu Oct 09 16:57:58 GMT+01:00 2025:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.16.1.1 - (1901046): instance f91a0030-0199-c9ae-a634-000005cbcfb8 
+on database directory C:\Users\brais\Downloads\store-app\store-app\work\database with class loader jdk.internal.loader.ClassLoaders$AppClassLoader@76ed5528 
+Loaded from file:/C:/Users/brais/.m2/repository/org/apache/derby/derby/10.16.1.1/derby-10.16.1.1.jar
+java.vendor=Microsoft
+java.runtime.version=21.0.8+9-LTS
+user.dir=C:\Users\brais\Downloads\store-app\store-app
+os.name=Windows 11
+os.arch=amd64
+os.version=10.0
+derby.system.home=null
+Database Class Loader started - derby.database.classpath=''
