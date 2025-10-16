@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.UUID;
 import jakarta.annotation.PostConstruct;
 import org.apache.commons.compress.utils.IOUtils;
@@ -28,6 +29,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.mail.Session;
 
 @Service
 public class UserService {
@@ -83,17 +86,24 @@ public class UserService {
 
         try {
 
+            // Activar logging detallado de JavaMail
+            System.setProperty("mail.debug", "true");
             System.setProperty("mail.smtp.ssl.protocols", "TLSv1.2");
 
             HtmlEmail htmlEmail = new HtmlEmail();
             htmlEmail.setHostName(configurationParameters.getMailHost());
             htmlEmail.setSmtpPort(configurationParameters.getMailPort());
             htmlEmail.setSslSmtpPort(Integer.toString(configurationParameters.getMailPort()));
-            htmlEmail.setAuthentication(configurationParameters.getMailUserName(),
-                    configurationParameters.getMailPassword());
+            htmlEmail.setAuthentication(
+                    configurationParameters.getMailUserName(),
+                    configurationParameters.getMailPassword()
+            );
             htmlEmail.setSSLOnConnect(configurationParameters.getMailSslEnable() != null
                     && configurationParameters.getMailSslEnable());
-            if (configurationParameters.getMailStartTlsEnable()) {
+
+            htmlEmail.setSSLCheckServerIdentity(true);
+
+            if (Boolean.TRUE.equals(configurationParameters.getMailStartTlsEnable())) {
                 htmlEmail.setStartTLSEnabled(true);
                 htmlEmail.setStartTLSRequired(true);
             }
@@ -113,6 +123,7 @@ public class UserService {
                     new Object[0], locale));
 
             htmlEmail.send();
+
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
             throw new ServiceException(ex.getMessage());

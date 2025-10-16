@@ -316,7 +316,7 @@ public class UserController {
                               Locale locale, 
                               Model model) {
         try {
-            if(email == null || email.trim().length() == 0) {
+            if(email == null || email.trim().isEmpty()) {
                 String message = messageSource.getMessage(Constants.INVALID_EMAIL_MESSAGE, new Object[]{}, locale);
                 model.addAttribute(Constants.ERROR_MESSAGE, message);
                 return Constants.SEND_EMAIL_PAGE;
