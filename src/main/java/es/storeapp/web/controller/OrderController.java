@@ -47,6 +47,11 @@ public class OrderController {
 
     @Autowired
     ErrorHandlingUtils errorHandlingUtils;
+
+    private String sanitizeForLog(String input) {
+        if (input == null) return null;
+        return input.replaceAll("[\r\n\t]", "_");
+    }
     
     @GetMapping(Constants.ORDERS_ENDPOINT)
     public String doGetOrdersPage(@SessionAttribute(Constants.USER_SESSION) User user, 
@@ -106,7 +111,7 @@ public class OrderController {
             orderForm.setName(orderName);
         }
         if(logger.isDebugEnabled()) {
-            logger.debug(MessageFormat.format("Go to complete order page {0}", orderForm.getName()));
+            logger.debug("Go to complete order page: {}", sanitizeForLog(orderForm.getName()));
         }
         model.addAttribute(Constants.ORDER_FORM, orderForm);
         model.addAttribute(Constants.PRODUCTS, products);

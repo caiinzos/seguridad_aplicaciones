@@ -65,13 +65,16 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User login(String email, String clearPassword) throws AuthenticationException {
-        if (!userRepository.existsUser(email)) {
+        User user = userRepository.findByEmail(email);
+
+        if (user == null) {
             throw exceptionGenerationUtils.toAuthenticationException(Constants.AUTH_INVALID_USER_MESSAGE, email);
         }
-        User user = userRepository.findByEmailAndPassword(email, BCrypt.hashpw(clearPassword, SALT));
-        if (user == null) {
+
+        if (!BCrypt.checkpw(clearPassword, user.getPassword())) {
             throw exceptionGenerationUtils.toAuthenticationException(Constants.AUTH_INVALID_PASSWORD_MESSAGE, email);
         }
+
         return user;
     }
 
@@ -170,22 +173,6 @@ public class UserService {
     }
 
     @Transactional
-    public User changePassword(Long id, String oldPassword, String password)
-            throws InstanceNotFoundException, AuthenticationException {
-        User user = userRepository.findById(id);
-        if (user == null) {
-            throw exceptionGenerationUtils.toAuthenticationException(
-                    Constants.AUTH_INVALID_USER_MESSAGE, id.toString());
-        }
-        if (userRepository.findByEmailAndPassword(user.getEmail(), BCrypt.hashpw(oldPassword, SALT)) == null) {
-            throw exceptionGenerationUtils.toAuthenticationException(Constants.AUTH_INVALID_PASSWORD_MESSAGE,
-                    id.toString());
-        }
-        user.setPassword(BCrypt.hashpw(password, SALT));
-        return userRepository.update(user);
-    }
-
-    @Transactional
     public User changePassword(String email, String password, String token) throws AuthenticationException {
         User user = userRepository.findByEmail(email);
         if (user == null) {
@@ -194,6 +181,7 @@ public class UserService {
         if (user.getResetPasswordToken() == null || !user.getResetPasswordToken().equals(token)) {
             throw exceptionGenerationUtils.toAuthenticationException(Constants.AUTH_INVALID_TOKEN_MESSAGE, email);
         }
+
         user.setPassword(BCrypt.hashpw(password, SALT));
         user.setResetPasswordToken(null);
         return userRepository.update(user);

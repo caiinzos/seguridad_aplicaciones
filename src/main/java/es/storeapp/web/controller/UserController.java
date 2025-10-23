@@ -56,6 +56,11 @@ public class UserController {
     
     @Autowired
     ErrorHandlingUtils errorHandlingUtils;
+
+    private String sanitizeForLog(String input) {
+        if (input == null) return null;
+        return input.replaceAll("[\r\n\t]", "_");
+    }
     
     @GetMapping(Constants.LOGIN_ENDPOINT)
     public String doGetLoginPage(Model model) {
@@ -134,7 +139,7 @@ public class UserController {
             user = userService.login(loginForm.getEmail(), loginForm.getPassword());
             session.setAttribute(Constants.USER_SESSION, user);
             if(logger.isDebugEnabled()) {
-                logger.debug(MessageFormat.format("User {0} logged in", user.getEmail()));
+                logger.debug("User {} logged in", sanitizeForLog(user.getEmail()));
             }
             if (loginForm.getRememberMe() != null && loginForm.getRememberMe()) {
                 Base64.Encoder encoder = Base64.getEncoder();
@@ -148,14 +153,18 @@ public class UserController {
                 response.addCookie(userCookie);
             }
         } catch (AuthenticationException ex) {
-            if(logger.isDebugEnabled()) {
-                logger.debug(MessageFormat.format("User {0} not logged in ", loginForm.getEmail()));
+            if (logger.isDebugEnabled()) {
+                logger.debug("User {} not logged in", sanitizeForLog(loginForm.getEmail()));
             }
             return errorHandlingUtils.handleAuthenticationException(ex, loginForm.getEmail(), 
                     Constants.LOGIN_PAGE, model, locale);
         }
-        if (next != null && next.trim().length() > 0) {
-            return Constants.SEND_REDIRECT + next;
+        if (next != null && !next.trim().isEmpty()) {
+            if (next.startsWith("/") && !next.contains("..") && !next.contains("://")) {
+                return Constants.SEND_REDIRECT + next;
+            } else {
+                logger.warn("Redirección no autorizada bloqueada: {}", sanitizeForLog(next));
+            }
         }
         return Constants.SEND_REDIRECT + Constants.ROOT_ENDPOINT;
     }
@@ -179,7 +188,9 @@ public class UserController {
                     userProfileForm.getImage() != null ? userProfileForm.getImage().getOriginalFilename() : null,
                     userProfileForm.getImage() != null ? userProfileForm.getImage().getBytes() : null);
             if(logger.isDebugEnabled()) {
-                logger.debug(MessageFormat.format("User {0} with name {1} registered", user.getEmail(), user.getName()));
+                logger.debug("User {} with name {} registered",
+                        sanitizeForLog(user.getEmail()),
+                        sanitizeForLog(user.getName()));
             }
             session.setAttribute(Constants.USER_SESSION, user);
             redirectAttributes.addFlashAttribute(Constants.SUCCESS_MESSAGE, messageSource.getMessage(
@@ -213,8 +224,9 @@ public class UserController {
                     userProfileForm.getImage() != null ? userProfileForm.getImage().getBytes() : null);
             
             if(logger.isDebugEnabled()) {
-                logger.debug(MessageFormat.format("User {0} with name {1} updated", 
-                        updatedUser.getEmail(), updatedUser.getName()));
+                logger.debug("User {} with name {} updated",
+                        sanitizeForLog(updatedUser.getEmail()),
+                        sanitizeForLog(updatedUser.getName()));
             }
             
             session.setAttribute(Constants.USER_SESSION, updatedUser);
@@ -245,12 +257,10 @@ public class UserController {
         }
         User updatedUser;
         try {
-            updatedUser = userService.changePassword(user.getUserId(), passwordForm.getOldPassword(), passwordForm.getPassword());
+            updatedUser = userService.changePassword(user.getUserId().toString(), passwordForm.getOldPassword(), passwordForm.getPassword());
             session.setAttribute(Constants.USER_SESSION, updatedUser);
             redirectAttributes.addFlashAttribute(Constants.SUCCESS_MESSAGE, messageSource.getMessage(
                     Constants.PROFILE_UPDATE_SUCCESS, new Object[]{}, locale));
-        } catch (InstanceNotFoundException ex) {
-            return errorHandlingUtils.handleInstanceNotFoundException(ex, model, locale);
         } catch (AuthenticationException ex) {
             return errorHandlingUtils.handleAuthenticationException(ex, user.getEmail(), 
                     Constants.PASSWORD_PAGE, model, locale);

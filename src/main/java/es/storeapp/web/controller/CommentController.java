@@ -37,6 +37,11 @@ public class CommentController {
     
     @Autowired
     ErrorHandlingUtils errorHandlingUtils;
+
+    private String sanitizeForLog(String input) {
+        if (input == null) return null;
+        return input.replaceAll("[\r\n\t]", "_");
+    }
     
     @GetMapping(value = {Constants.COMMENT_PRODUCT_ENDPOINT})
     public String doGetCommentPage(@PathVariable() Long id, 
@@ -53,7 +58,9 @@ public class CommentController {
                 commentForm.setRating(comment.getRating());
                 commentForm.setText(comment.getText());
                 if(logger.isDebugEnabled()) {
-                    logger.debug(MessageFormat.format("Loading previous comment {0}", commentForm));
+                    logger.debug("Loading previous comment for product {} and user {}",
+                            id,
+                            sanitizeForLog(user.getEmail()));
                 }
             }
         } catch (InstanceNotFoundException ex) {

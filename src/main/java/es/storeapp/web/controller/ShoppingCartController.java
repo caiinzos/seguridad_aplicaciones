@@ -53,7 +53,7 @@ public class ShoppingCartController {
             product = productService.findProductById(id);
             List<Product> products = shoppingCart.getProducts();
             if(logger.isDebugEnabled()) {
-                logger.debug(MessageFormat.format("Adding product {0} to shopping cart", id));
+                logger.debug("Adding product {} to shopping cart", id);
             }
             for (Product p : products) {
                 if (p.getProductId().equals(id)) {
