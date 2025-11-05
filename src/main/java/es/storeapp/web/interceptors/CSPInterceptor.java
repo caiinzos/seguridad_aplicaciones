@@ -11,15 +11,16 @@ public class CSPInterceptor implements HandlerInterceptor {
         throws Exception {
         response.setHeader("Content-Security-Policy",
                 "default-src 'self'; " +
-                        "img-src 'self' data: https:; " +
-                        "script-src 'self' 'unsafe-inline'; " +
-                        "style-src 'self' 'unsafe-inline'; " +
-                        "font-src 'self'; " +
-                        "connect-src 'self'; " +
-                        "object-src 'none'; " +
                         "base-uri 'self'; " +
-                        "frame-ancestors 'none'");
+                        "object-src 'none'; " +
+                        "frame-ancestors 'self'; " +
+                        "form-action 'self'; " +
+                        "img-src 'self' data:; " +           
+                        "font-src 'self' data:; " +            
+                        "connect-src 'self'; " +               
+                        "script-src 'self' 'unsafe-inline'; " +
+                        "style-src 'self' 'unsafe-inline'; " + 
+                        "upgrade-insecure-requests;");         
         return true;
     }
     
-}
