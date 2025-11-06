@@ -21,8 +21,8 @@ public class ErrorHandlingUtils {
 
     @Autowired
     private MessageSource messageSource;
-    
-    public String handleInvalidFormError(BindingResult result, String template, 
+
+    public String handleInvalidFormError(BindingResult result, String template,
                                          Model model, Locale locale) {
         if(logger.isErrorEnabled()) {
             logger.error(result.toString());
@@ -31,14 +31,14 @@ public class ErrorHandlingUtils {
         model.addAttribute(Constants.ERROR_MESSAGE, message);
         return Constants.ERROR_PAGE;
     }
-    
+
     public String handleInstanceNotFoundException(InstanceNotFoundException e, Model model, Locale locale) {
         logger.error(e.getMessage(), e);
         model.addAttribute(Constants.ERROR_MESSAGE, e.getMessage());
         model.addAttribute(Constants.EXCEPTION, e);
         return Constants.ERROR_PAGE;
     }
-    
+
     public String handleDuplicatedResourceException(DuplicatedResourceException e, String targetPage,
                                                     Model model, Locale locale) {
         logger.error(e.getMessage(), e);
@@ -54,18 +54,27 @@ public class ErrorHandlingUtils {
         model.addAttribute(Constants.EXCEPTION, e);
         return targetPage;
     }
-    
+
     public String handleInvalidStateException(InvalidStateException e, Model model, Locale locale) {
         logger.error(e.getMessage(), e);
         model.addAttribute(Constants.ERROR_MESSAGE, e.getMessage());
         model.addAttribute(Constants.EXCEPTION, e);
         return Constants.ERROR_PAGE;
     }
-    
+
     public String handleUnexpectedException(Exception e, Model model) {
         logger.error(e.getMessage(), e);
         model.addAttribute(Constants.ERROR_MESSAGE, e.getMessage());
         model.addAttribute(Constants.EXCEPTION, e);
+        return Constants.ERROR_PAGE;
+    }
+
+    // CWE-639
+    public String handleAccessDeniedException(String message, Model model, Locale locale) {
+        logger.warn("ACCESS DENIED: {}", message);
+        model.addAttribute(Constants.ERROR_MESSAGE, message);
+        model.addAttribute("status", "403");
+        model.addAttribute("error", "Forbidden");
         return Constants.ERROR_PAGE;
     }
 }

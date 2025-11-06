@@ -1,10 +1,12 @@
 es\storeapp\business\exceptions\InstanceNotFoundException.class
 es\storeapp\business\entities\Category.class
 es\storeapp\web\forms\UserProfileForm.class
+es\storeapp\web\filters\XSSFilter.class
 es\storeapp\business\exceptions\InputValidationException.class
 es\storeapp\business\repositories\AbstractRepository.class
 es\storeapp\business\services\UserService.class
 es\storeapp\common\Constants.class
+es\storeapp\web\config\XSSanitizerResolver.class
 es\storeapp\business\repositories\UserRepository.class
 es\storeapp\business\entities\User.class
 es\storeapp\business\repositories\OrderRepository.class
@@ -32,6 +34,7 @@ es\storeapp\web\interceptors\CSPInterceptor.class
 es\storeapp\business\exceptions\DuplicatedResourceException.class
 es\storeapp\web\forms\ResetPasswordForm.class
 es\storeapp\business\repositories\CategoryRepository.class
+es\storeapp\web\filters\XSSRequestWrapper.class
 es\storeapp\web\session\ShoppingCart.class
 es\storeapp\business\repositories\ProductRepository.class
 es\storeapp\web\forms\OrderForm.class
@@ -42,6 +45,7 @@ es\storeapp\web\interceptors\AutoLoginInterceptor.class
 es\storeapp\business\exceptions\AuthenticationException.class
 es\storeapp\web\config\WebMvcConfig.class
 es\storeapp\web\controller\CommentController.class
+es\storeapp\business\utils\InputSanitizer.class
 es\storeapp\web\forms\ProductSearchForm.class
 es\storeapp\web\interceptors\AuthenticatedUserInterceptor.class
 es\storeapp\business\entities\CreditCard.class

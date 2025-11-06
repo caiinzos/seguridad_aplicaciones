@@ -18,6 +18,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Properties;
 import java.util.UUID;
 import jakarta.annotation.PostConstruct;
 import org.apache.commons.compress.utils.IOUtils;
@@ -29,6 +30,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.mail.Session;
 
 @Service
 public class UserService {
@@ -63,13 +66,16 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User login(String email, String clearPassword) throws AuthenticationException {
-        if (!userRepository.existsUser(email)) {
+        User user = userRepository.findByEmail(email);
+
+        if (user == null) {
             throw exceptionGenerationUtils.toAuthenticationException(Constants.AUTH_INVALID_USER_MESSAGE, email);
         }
-        User user = userRepository.findByEmailAndPassword(email, BCrypt.hashpw(clearPassword, SALT));
-        if (user == null) {
+
+        if (!BCrypt.checkpw(clearPassword, user.getPassword())) {
             throw exceptionGenerationUtils.toAuthenticationException(Constants.AUTH_INVALID_PASSWORD_MESSAGE, email);
         }
+
         return user;
     }
 
@@ -84,17 +90,24 @@ public class UserService {
 
         try {
 
+            // Activar logging detallado de JavaMail
+            System.setProperty("mail.debug", "true");
             System.setProperty("mail.smtp.ssl.protocols", "TLSv1.2");
 
             HtmlEmail htmlEmail = new HtmlEmail();
             htmlEmail.setHostName(configurationParameters.getMailHost());
             htmlEmail.setSmtpPort(configurationParameters.getMailPort());
             htmlEmail.setSslSmtpPort(Integer.toString(configurationParameters.getMailPort()));
-            htmlEmail.setAuthentication(configurationParameters.getMailUserName(),
-                    configurationParameters.getMailPassword());
+            htmlEmail.setAuthentication(
+                    configurationParameters.getMailUserName(),
+                    configurationParameters.getMailPassword()
+            );
             htmlEmail.setSSLOnConnect(configurationParameters.getMailSslEnable() != null
                     && configurationParameters.getMailSslEnable());
-            if (configurationParameters.getMailStartTlsEnable()) {
+
+            htmlEmail.setSSLCheckServerIdentity(true);
+
+            if (Boolean.TRUE.equals(configurationParameters.getMailStartTlsEnable())) {
                 htmlEmail.setStartTLSEnabled(true);
                 htmlEmail.setStartTLSRequired(true);
             }
@@ -114,6 +127,7 @@ public class UserService {
                     new Object[0], locale));
 
             htmlEmail.send();
+
         } catch (Exception ex) {
             logger.error(ex.getMessage(), ex);
             throw new ServiceException(ex.getMessage());
@@ -160,22 +174,6 @@ public class UserService {
     }
 
     @Transactional
-    public User changePassword(Long id, String oldPassword, String password)
-            throws InstanceNotFoundException, AuthenticationException {
-        User user = userRepository.findById(id);
-        if (user == null) {
-            throw exceptionGenerationUtils.toAuthenticationException(
-                    Constants.AUTH_INVALID_USER_MESSAGE, id.toString());
-        }
-        if (userRepository.findByEmailAndPassword(user.getEmail(), BCrypt.hashpw(oldPassword, SALT)) == null) {
-            throw exceptionGenerationUtils.toAuthenticationException(Constants.AUTH_INVALID_PASSWORD_MESSAGE,
-                    id.toString());
-        }
-        user.setPassword(BCrypt.hashpw(password, SALT));
-        return userRepository.update(user);
-    }
-
-    @Transactional
     public User changePassword(String email, String password, String token) throws AuthenticationException {
         User user = userRepository.findByEmail(email);
         if (user == null) {
@@ -184,6 +182,7 @@ public class UserService {
         if (user.getResetPasswordToken() == null || !user.getResetPasswordToken().equals(token)) {
             throw exceptionGenerationUtils.toAuthenticationException(Constants.AUTH_INVALID_TOKEN_MESSAGE, email);
         }
+
         user.setPassword(BCrypt.hashpw(password, SALT));
         user.setResetPasswordToken(null);
         return userRepository.update(user);
