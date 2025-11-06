@@ -3,9 +3,11 @@ package es.storeapp.web.controller;
 import es.storeapp.business.entities.User;
 import es.storeapp.business.exceptions.AuthenticationException;
 import es.storeapp.business.exceptions.DuplicatedResourceException;
+import es.storeapp.business.exceptions.InputValidationException;
 import es.storeapp.business.exceptions.InstanceNotFoundException;
 import es.storeapp.business.exceptions.ServiceException;
 import es.storeapp.business.services.UserService;
+import es.storeapp.business.utils.FileValidator;
 import es.storeapp.common.Constants;
 import es.storeapp.web.cookies.UserInfo;
 import es.storeapp.web.exceptions.ErrorHandlingUtils;
@@ -56,6 +58,9 @@ public class UserController {
     
     @Autowired
     ErrorHandlingUtils errorHandlingUtils;
+    
+    @Autowired
+    FileValidator fileValidator;
     
     @GetMapping(Constants.LOGIN_ENDPOINT)
     public String doGetLoginPage(Model model) {
@@ -172,6 +177,15 @@ public class UserController {
                 Constants.REGISTRATION_INVALID_PARAMS_MESSAGE, model, locale);
             return Constants.USER_PROFILE_PAGE;
         }
+        
+        // Validate image file
+        try {
+            fileValidator.validateImageFile(userProfileForm.getImage());
+        } catch (InputValidationException ex) {
+            model.addAttribute(Constants.ERROR_MESSAGE, ex.getMessage());
+            return Constants.USER_PROFILE_PAGE;
+        }
+        
         User user;
         try {
             user = userService.create(userProfileForm.getName(), userProfileForm.getEmail(),
@@ -205,6 +219,15 @@ public class UserController {
                 Constants.UPDATE_PROFILE_INVALID_PARAMS_MESSAGE, model, locale);
             return Constants.USER_PROFILE_PAGE;
         }
+        
+        // Validate image file
+        try {
+            fileValidator.validateImageFile(userProfileForm.getImage());
+        } catch (InputValidationException ex) {
+            model.addAttribute(Constants.ERROR_MESSAGE, ex.getMessage());
+            return Constants.USER_PROFILE_PAGE;
+        }
+        
         User updatedUser;
         try {
             updatedUser = userService.update(user.getUserId(), userProfileForm.getName(), userProfileForm.getEmail(),

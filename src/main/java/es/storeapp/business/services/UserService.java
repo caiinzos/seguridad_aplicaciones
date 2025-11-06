@@ -3,6 +3,7 @@ package es.storeapp.business.services;
 import es.storeapp.business.entities.User;
 import es.storeapp.business.exceptions.AuthenticationException;
 import es.storeapp.business.exceptions.DuplicatedResourceException;
+import es.storeapp.business.exceptions.InputValidationException;
 import es.storeapp.business.exceptions.InstanceNotFoundException;
 import es.storeapp.business.exceptions.ServiceException;
 import es.storeapp.business.repositories.UserRepository;
@@ -214,6 +215,14 @@ public class UserService {
 
     private void saveProfileImage(Long id, String image, byte[] imageContents) {
         if (image != null && image.trim().length() > 0 && imageContents != null) {
+            // Additional server-side validation
+            try {
+                validateImageBytes(image, imageContents);
+            } catch (InputValidationException e) {
+                logger.error("Invalid image file detected: {}", e.getMessage());
+                return; // Do not save invalid files
+            }
+            
             File userDir = new File(resourcesDir, id.toString());
             userDir.mkdirs();
             File profilePicture = new File(userDir, image);
@@ -242,6 +251,65 @@ public class UserService {
             }
         }
         return null;
+    }
+    
+    private void validateImageBytes(String filename, byte[] imageContents) throws InputValidationException {
+        if (imageContents == null || imageContents.length == 0) {
+            throw new InputValidationException("Empty file");
+        }
+        
+        // Validate file extension
+        String extension = "";
+        int lastDotIndex = filename.lastIndexOf('.');
+        if (lastDotIndex > 0) {
+            extension = filename.substring(lastDotIndex + 1).toLowerCase();
+        }
+        
+        if (!extension.matches("jpg|jpeg|png|gif|bmp|webp")) {
+            throw new InputValidationException("Invalid file extension");
+        }
+        
+        // Validate magic bytes
+        if (!isValidImageBytes(imageContents)) {
+            throw new InputValidationException("Invalid image file signature");
+        }
+    }
+    
+    private boolean isValidImageBytes(byte[] bytes) {
+        if (bytes.length < 8) {
+            return false;
+        }
+        
+        // JPEG
+        if (bytes.length >= 3 && (bytes[0] & 0xFF) == 0xFF && (bytes[1] & 0xFF) == 0xD8 && (bytes[2] & 0xFF) == 0xFF) {
+            return true;
+        }
+        
+        // PNG
+        if (bytes.length >= 8 && (bytes[0] & 0xFF) == 0x89 && bytes[1] == 0x50 && bytes[2] == 0x4E && 
+            bytes[3] == 0x47 && (bytes[4] & 0xFF) == 0x0D && (bytes[5] & 0xFF) == 0x0A && 
+            (bytes[6] & 0xFF) == 0x1A && (bytes[7] & 0xFF) == 0x0A) {
+            return true;
+        }
+        
+        // GIF
+        if (bytes.length >= 6 && bytes[0] == 0x47 && bytes[1] == 0x49 && bytes[2] == 0x46 && 
+            bytes[3] == 0x38 && (bytes[4] == 0x37 || bytes[4] == 0x39) && bytes[5] == 0x61) {
+            return true;
+        }
+        
+        // BMP
+        if (bytes.length >= 2 && bytes[0] == 0x42 && bytes[1] == 0x4D) {
+            return true;
+        }
+        
+        // WebP
+        if (bytes.length >= 12 && bytes[0] == 0x52 && bytes[1] == 0x49 && bytes[2] == 0x46 && 
+            bytes[3] == 0x46 && bytes[8] == 0x57 && bytes[9] == 0x45 && bytes[10] == 0x42 && bytes[11] == 0x50) {
+            return true;
+        }
+        
+        return false;
     }
 
 }

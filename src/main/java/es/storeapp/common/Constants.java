@@ -21,6 +21,7 @@ public class Constants {
     public static final String DUPLICATED_INSTANCE_MESSAGE = "duplicated.instance.exception";
     public static final String DUPLICATED_COMMENT_MESSAGE = "duplicated.comment.exception";
     public static final String INVALID_PROFILE_IMAGE_MESSAGE = "invalid.profile.image";
+    public static final String INVALID_FILE_UPLOAD_MESSAGE = "invalid.file.upload";
     public static final String INVALID_STATE_EXCEPTION_MESSAGE = "invalid.state";
     public static final String INVALID_EMAIL_MESSAGE = "invalid.email";
    
