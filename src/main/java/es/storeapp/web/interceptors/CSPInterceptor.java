@@ -23,4 +23,4 @@ public class CSPInterceptor implements HandlerInterceptor {
                         "upgrade-insecure-requests;");         
         return true;
     }
-    
+}    
